@@ -17,14 +17,14 @@ const showDescription = ref(false);
 
 
 <template>
-  <v-card class="mx-auto" max-width="344">
+  <!-- <v-card class="mx-auto d-flex flex-column" max-width="344" height="100%" > -->
+  <v-card class="mx-auto" max-width="344" height="100%" >
     <v-skeleton-loader v-if="props.loading === true" type="image,heading, subtitle, ossein, button"></v-skeleton-loader>
     <template v-else>
       <v-img
         :src="props.product.images[0].thumbnail"
         :srcset="props.product.images[0].srcset"
         :alt="props.product.images[0].alt"
-        height="100%" 
         cover
       ></v-img>
 

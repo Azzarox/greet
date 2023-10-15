@@ -23,20 +23,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-container>
-    <v-row no-gutters>
-      <v-col
-        cols="12"
-        md="6"
-        lg="4"
-        v-for="product in productsList"
-        :key="`product-${product.id}`"
-      >
-        <v-sheet class="ma-2 pa-2">
+  <v-container tag="div" >
+      <v-row>
+        <v-col
+          cols="12"
+          sm="4"
+          v-for="product in productsList"
+          :key="`product-${product.id}`"
+        >
           <ProductsCard :loading="loadingState" :product="product" />
-        </v-sheet>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
   </v-container>
 </template>
 
