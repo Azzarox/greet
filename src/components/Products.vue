@@ -1,37 +1,30 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import ProductsCard from "./ProductsCard.vue";
+import { VSkeletonLoader } from "vuetify/lib/labs/components.mjs";
+VSkeletonLoader;
 
 const productsList = ref([]);
+const loadingState = ref(true);
 
 onMounted(async () => {
-  productsList.value = await fetch(
-    "https://greet.bg/wp-json/wc/store/products?page=1"
-  ).then((response) => response.json());
+  try {
+    loadingState.value = true;
+
+    productsList.value = await fetch(
+      "https://greet.bg/wp-json/wc/store/products?page=1"
+    ).then((response) => response.json());
+
+    loadingState.value = false;
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
 });
 </script>
 
-
 <template>
-    <v-col cols="12" v-for="product in productsList" :key="`user-${product.id}`">
-    <!-- <p>Images Source: 
-        <ul>
-            <li v-for="image in product.images" :key="`image-${image.id}`">
-                <img :src="image.src" :alt="image.alt">
-            </li>
-        </ul>
-    </p>
-    <div v-html="product.name"></div>
-    <div v-html="product.short_description">
-    </div>
-    <p>Categories: 
-        <ul>
-            <li v-for="(category, index) in product.categories" :key="`category-${index}-${category.slug}`">
-                {{ category.name }}
-            </li>
-        </ul>
-    </p> -->
-    <ProductsCard :product="product" />
+  <v-col cols="12" v-for="product in productsList" :key="`user-${product.id}`">
+    <ProductsCard :loading="loadingState" :product="product" />
   </v-col>
 </template>
 
