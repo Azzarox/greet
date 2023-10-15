@@ -24,8 +24,7 @@ const showDescription = ref(false);
         :src="props.product.images[0].thumbnail"
         :srcset="props.product.images[0].srcset"
         :alt="props.product.images[0].alt"
-        class="customImage"
-        height="100%"
+        height="100%" 
         cover
       ></v-img>
 
@@ -65,5 +64,3 @@ const showDescription = ref(false);
     </template>
   </v-card>
 </template>
-
-<style scoped></style>

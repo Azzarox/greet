@@ -23,19 +23,23 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-col cols="12" v-for="product in productsList" :key="`user-${product.id}`">
-    <ProductsCard :loading="loadingState" :product="product" />
-  </v-col>
+  <v-container>
+    <v-row no-gutters>
+      <v-col
+        cols="12"
+        md="6"
+        lg="4"
+        v-for="product in productsList"
+        :key="`product-${product.id}`"
+      >
+        <v-sheet class="ma-2 pa-2">
+          <ProductsCard :loading="loadingState" :product="product" />
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
-img {
-  width: 300px;
-  height: 300px;
-  object-fit: cover; /* Maintain aspect ratio and cover the entire container */
-  object-position: center top; /* Center the image within the container */
-  border-radius: 50%; /* Make the image a circle (for square images) */
-  border: 2px solid #ccc; /* Add a subtle border */
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a soft shadow */
-}
+/*  */
 </style>
