@@ -3,13 +3,16 @@ import { ref, onMounted, computed } from "vue";
 import ProductsCard from "./ProductsCard.vue";
 import { VSkeletonLoader } from "vuetify/lib/labs/components.mjs";
 import { baseUrl } from "@/composables/baseUrl.js";
-import CategoriesDropdown from "./CategoriesDropdown.vue";
+import ProductsFilterByCategories from "./ProductsFilterByCategories.vue";
 import ProductsFilterByNameOrPrice from "./ProductsFilterByNameOrPrice.vue";
+import { sortByNameAndPrice } from "../utils/sortByNameAndPrice.js";
+
 VSkeletonLoader;
 
 const productsList = ref([]);
 const loadingState = ref(true);
 const filterBy = ref("");
+const filterByCategory = ref("");
 
 onMounted(async () => {
   try {
@@ -28,12 +31,7 @@ onMounted(async () => {
 const filteredProducts = computed(() => {
   const sortedProductList = [...productsList.value];
 
-  if (filterBy.value === "Име") {
-    sortedProductList.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (filterBy.value === "Цена") {
-    sortedProductList.sort((a, b) => a.prices.price - b.prices.price);
-  }
-  return sortedProductList;
+  return sortByNameAndPrice(sortedProductList, filterBy.value);
 });
 
 const categories = computed(() => {
@@ -50,6 +48,29 @@ const categories = computed(() => {
 const updateFilterByValueHandler = (option) => {
   filterBy.value = option;
 };
+
+const updateFilterByCategoryHandler = (category) => {
+  filterByCategory.value = category;
+};
+
+const filteredProductsByCategory = computed(() => {
+  return productsList.value.filter((product) => {
+    const productCategories = product.categories.map(
+      (category) => category.name
+    );
+    if (!productCategories.includes(filterByCategory.value)) return false;
+    return true;
+  });
+});
+
+const productsListWithFilters = computed(() => {
+  if (filterByCategory.value) {
+    const filteredByCategories = filteredProductsByCategory.value;
+    return sortByNameAndPrice(filteredByCategories, filterBy.value);
+  } else {
+    return filteredProducts.value;
+  }
+});
 </script>
 
 <template>
@@ -60,16 +81,19 @@ const updateFilterByValueHandler = (option) => {
           <ProductsFilterByNameOrPrice
             @update-filter-option="updateFilterByValueHandler"
           />
-          <CategoriesDropdown :categories="categories" />
+          <ProductsFilterByCategories
+            @update-filter-category="updateFilterByCategoryHandler"
+            :categories="categories"
+          />
         </v-toolbar-items>
       </v-toolbar>
     </v-container>
-    
+
     <v-row>
       <v-col
         cols="12"
         sm="4"
-        v-for="product in filteredProducts"
+        v-for="product in productsListWithFilters"
         :key="`product-${product.id}`"
       >
         <ProductsCard :loading="loadingState" :product="product" />
