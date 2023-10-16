@@ -36,6 +36,10 @@ const showDescription = ref(false);
         <span v-html="props.product.name"></span>
       </v-card-title>
 
+      <v-card-text>
+        <span v-html="props.product.price_html"></span>
+      </v-card-text>
+
       <v-card-subtitle tag="div">
         <v-chip-group>
           <v-chip
@@ -48,17 +52,21 @@ const showDescription = ref(false);
       </v-card-subtitle>
 
       <v-card-actions>
-        <AddToCartButton :url="product.add_to_cart.url" :buttonText="product.add_to_cart.text === 'Добавяне в количката' ? product.add_to_cart.text : 'Добави с опции'"/>
+        <AddToCartButton
+          :url="product.add_to_cart.url"
+          :buttonText="
+            product.add_to_cart.text === 'Добавяне в количката'
+              ? product.add_to_cart.text
+              : 'Добави с опции'
+          "
+        />
 
         <v-spacer></v-spacer>
         <v-btn
           :icon="showDescription ? 'mdi-chevron-up' : 'mdi-chevron-down'"
           @click="showDescription = !showDescription"
         ></v-btn>
-        <v-spacer></v-spacer>
-
       </v-card-actions>
-      <span v-html="props.product.price_html"></span>
       <v-expand-transition>
         <div v-show="showDescription">
           <v-divider></v-divider>
