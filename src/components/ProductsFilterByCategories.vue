@@ -6,10 +6,12 @@ const props = defineProps({
     required: true,
   },
 });
+const emits = defineEmits(["update-filter-category"]);
 
 const pickedCategory = ref("Избери категория");
-const pickCategory = (ev) => {
+const pickCategory = (category, ev) => {
   pickedCategory.value = ev.target.textContent;
+  emits("update-filter-category", category);
 };
 </script>
 
@@ -26,7 +28,7 @@ const pickCategory = (ev) => {
           v-for="(category, index) in props.categories"
           :key="index"
           :value="index"
-          @click.prevent="pickCategory"
+          @click.prevent="pickCategory(category, $event)"
         >
           <v-list-item-title>
             {{ category }}
@@ -37,5 +39,4 @@ const pickCategory = (ev) => {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
