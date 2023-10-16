@@ -12,7 +12,6 @@ const { buttonText, url } = defineProps({
   },
 });
 
-console.log(url);
 </script>
 
 <template>

@@ -55,8 +55,10 @@ const showDescription = ref(false);
           :icon="showDescription ? 'mdi-chevron-up' : 'mdi-chevron-down'"
           @click="showDescription = !showDescription"
         ></v-btn>
-      </v-card-actions>
+        <v-spacer></v-spacer>
 
+      </v-card-actions>
+      <span v-html="props.product.price_html"></span>
       <v-expand-transition>
         <div v-show="showDescription">
           <v-divider></v-divider>
