@@ -3,6 +3,8 @@ import { ref, onMounted, computed } from "vue";
 import ProductsCard from "./ProductsCard.vue";
 import { VSkeletonLoader } from "vuetify/lib/labs/components.mjs";
 import { baseUrl } from "@/composables/baseUrl.js";
+import CategoriesDropdown from "./CategoriesDropdown.vue";
+import ProductsFilterByNameOrPrice from "./ProductsFilterByNameOrPrice.vue";
 VSkeletonLoader;
 
 const productsList = ref([]);
@@ -26,30 +28,43 @@ onMounted(async () => {
 const filteredProducts = computed(() => {
   const sortedProductList = [...productsList.value];
 
-  if (filterBy.value === "name") {
+  if (filterBy.value === "Име") {
     sortedProductList.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (filterBy.value === "price") {
+  } else if (filterBy.value === "Цена") {
     sortedProductList.sort((a, b) => a.prices.price - b.prices.price);
   }
-
   return sortedProductList;
 });
+
+const categories = computed(() => {
+  const list = [...productsList.value];
+  const uniqueCategories = new Set();
+  list.forEach((product) => {
+    product.categories.forEach((category) => {
+      uniqueCategories.add(category.name);
+    });
+  });
+  return Array.from(uniqueCategories); // Convert Set to an Array
+});
+
+const updateFilterByValueHandler = (option) => {
+  filterBy.value = option;
+};
 </script>
 
 <template>
   <v-container tag="div">
-    <div class="button-group">
-      <v-btn class="ma-2" variant="outlined" @click.prevent="filterBy = 'name'"
-        >Name</v-btn
-      >
-      <v-btn class="ma-2" variant="outlined" @click.prevent="filterBy = 'price'"
-        >Price</v-btn
-      >
-      <v-btn class="ma-2" variant="outlined" @click.prevent="filterBy = ''"
-        >Reset</v-btn
-      >
-    </div>
-
+    <v-container>
+      <v-toolbar title="Филтри" density="comfortable">
+        <v-toolbar-items>
+          <ProductsFilterByNameOrPrice
+            @update-filter-option="updateFilterByValueHandler"
+          />
+          <CategoriesDropdown :categories="categories" />
+        </v-toolbar-items>
+      </v-toolbar>
+    </v-container>
+    
     <v-row>
       <v-col
         cols="12"
@@ -64,10 +79,10 @@ const filteredProducts = computed(() => {
 </template>
 
 <style scoped>
-.button-group {
+/* .button-group {
   display: flex;
   flex-direction: row;
   justify-content: center;
   margin-bottom: 20px;
-}
+} */
 </style>
