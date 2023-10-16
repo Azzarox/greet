@@ -3,9 +3,9 @@ import { ref, onMounted, computed } from "vue";
 import ProductsCard from "./ProductsCard.vue";
 import { VSkeletonLoader } from "vuetify/lib/labs/components.mjs";
 import { baseUrl } from "@/composables/baseUrl.js";
-import ProductsFilterByCategories from "./ProductsFilterByCategories.vue";
-import ProductsFilterByNameOrPrice from "./ProductsFilterByNameOrPrice.vue";
 import { sortByNameAndPrice } from "../utils/sortByNameAndPrice.js";
+
+import ProductsFilterToolbar from "./ProductsFilterToolbar.vue";
 
 VSkeletonLoader;
 
@@ -76,17 +76,11 @@ const productsListWithFilters = computed(() => {
 <template>
   <v-container tag="div">
     <v-container>
-      <v-toolbar title="Филтри" density="comfortable">
-        <v-toolbar-items>
-          <ProductsFilterByNameOrPrice
-            @update-filter-option="updateFilterByValueHandler"
-          />
-          <ProductsFilterByCategories
-            @update-filter-category="updateFilterByCategoryHandler"
-            :categories="categories"
-          />
-        </v-toolbar-items>
-      </v-toolbar>
+      <ProductsFilterToolbar
+        :categories="categories"
+        :updateFilterByValueHandler="updateFilterByValueHandler"
+        :updateFilterByCategoryHandler="updateFilterByCategoryHandler"
+      />
     </v-container>
 
     <v-row>
