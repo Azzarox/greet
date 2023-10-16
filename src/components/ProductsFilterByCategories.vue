@@ -19,7 +19,7 @@ const pickCategory = (category, ev) => {
   <div class="d-flex justify-space-around">
     <v-menu>
       <template v-slot:activator="{ props }">
-        <v-btn color="primary" v-bind="props">
+        <v-btn color="black" v-bind="props">
           {{ pickedCategory }}
         </v-btn>
       </template>
