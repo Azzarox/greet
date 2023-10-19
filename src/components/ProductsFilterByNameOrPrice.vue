@@ -16,7 +16,6 @@ const selectFilterOption = (selectedOption) => {
   <div class="d-flex justify-space-around">
     <v-menu>
       <template v-slot:activator="{ props }">
-        <!-- Note: To Fix -->
         <v-btn style="min-width: 100px;" w-auto color="black" v-bind="props">
           {{ filteredText }}
         </v-btn>

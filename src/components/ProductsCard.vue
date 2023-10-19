@@ -18,7 +18,6 @@ const showDescription = ref(false);
 </script>
 
 <template>
-  <!-- <v-card class="mx-auto d-flex flex-column" max-width="344" height="100%" > -->
   <v-card class="mx-auto" max-width="344" height="100%">
     <v-skeleton-loader
       v-if="props.loading === true"

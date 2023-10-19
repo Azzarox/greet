@@ -44,7 +44,7 @@ const categories = computed(() => {
     });
   });
   uniqueCategories.add("Всички");
-  return Array.from(uniqueCategories); // Convert Set to an Array
+  return Array.from(uniqueCategories);
 });
 
 const updateFilterByValueHandler = (option) => {
@@ -144,10 +144,5 @@ async function loadMore({ done }) {
 </template>
 
 <style scoped>
-/* .button-group {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 20px;
-} */
+
 </style>
