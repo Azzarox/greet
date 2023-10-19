@@ -4,7 +4,7 @@ import ProductsCard from "./ProductsCard.vue";
 import { VSkeletonLoader } from "vuetify/lib/labs/components.mjs";
 import { baseUrl } from "@/composables/baseUrl.js";
 import { sortByNameAndPrice } from "../utils/sortByNameAndPrice.js";
-
+import { VInfiniteScroll } from "vuetify/labs/VInfiniteScroll";
 import ProductsFilterToolbar from "./ProductsFilterToolbar.vue";
 
 VSkeletonLoader;
@@ -13,6 +13,7 @@ const productsList = ref([]);
 const loadingState = ref(true);
 const filterBy = ref("");
 const filterByCategory = ref("");
+const currentPage = ref(1);
 
 onMounted(async () => {
   try {
@@ -42,6 +43,7 @@ const categories = computed(() => {
       uniqueCategories.add(category.name);
     });
   });
+  uniqueCategories.add("Всички");
   return Array.from(uniqueCategories); // Convert Set to an Array
 });
 
@@ -65,12 +67,41 @@ const filteredProductsByCategory = computed(() => {
 
 const productsListWithFilters = computed(() => {
   if (filterByCategory.value) {
+    if (filterByCategory.value == "Всички") {
+      return filteredProducts.value;
+    }
+
     const filteredByCategories = filteredProductsByCategory.value;
     return sortByNameAndPrice(filteredByCategories, filterBy.value);
   } else {
     return filteredProducts.value;
   }
 });
+
+async function loadMore({ done }) {
+  try {
+    if (currentPage.value === 24) {
+      done("empty");
+      return;
+    }
+
+    loadingState.value = true;
+
+    currentPage.value++;
+
+    const nextPage = await fetch(
+      `${baseUrl}/wp-json/wc/store/products?page=${currentPage.value}`
+    ).then((response) => response.json());
+
+    productsList.value = productsList.value.concat(nextPage);
+    loadingState.value = false;
+
+    done("ok");
+  } catch (error) {
+    console.error("An error occurred:", error);
+    done("error");
+  }
+}
 </script>
 
 <template>
@@ -93,6 +124,22 @@ const productsListWithFilters = computed(() => {
         <ProductsCard :loading="loadingState" :product="product" />
       </v-col>
     </v-row>
+
+    <v-infinite-scroll
+      :height="300"
+      :items="productsListWithFilters"
+      :onLoad="loadMore"
+      direction="vertical"
+      emptyText="There is no more results to load!"
+      mode="intersect"
+      side="end"
+    >
+      <template v-for="(item, index) in items" :key="item">
+        <div :class="['pa-2', index % 2 === 0 ? 'bg-grey-lighten-2' : '']">
+          Item #{{ item }}
+        </div>
+      </template>
+    </v-infinite-scroll>
   </v-container>
 </template>
 
